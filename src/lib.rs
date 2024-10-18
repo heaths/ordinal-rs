@@ -6,6 +6,14 @@ use core::fmt;
 /// Format numbers as ordinals e.g., 1st, 12th, 21st, etc.
 pub trait Ordinal: fmt::Display {
     /// Format a number as an ordinal. Implementations should not allocate.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use ordinal::Ordinal;
+    ///
+    /// println!("{}", 12.ordinal());
+    /// ```
     fn ordinal(&self) -> String {
         format!("{}{}", self, self.suffix())
     }
@@ -19,7 +27,7 @@ macro_rules! impl_ordinal {
         impl $crate::Ordinal for $t {
             fn suffix(&self) -> &'static str {
                 let n = (*self % 20) as u8;
-                if (10..=19).contains(&n) {
+                if (11..=13).contains(&n) {
                     return "th";
                 }
 
@@ -122,3 +130,7 @@ fn test_suffix() {
     assert_eq!(10001111u128.suffix(), "th");
     assert_eq!(10001111u128.suffix(), "th");
 }
+
+#[doc = include_str!("../README.md")]
+#[cfg(doctest)]
+struct ReadMe;
