@@ -8,7 +8,6 @@ Format an integer as an ordinal:
 
 ```rust
 use ordinal::Ordinal;
-
 println!("{}", 12.ordinal());
 ```
 

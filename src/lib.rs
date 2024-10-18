@@ -11,7 +11,6 @@ pub trait Ordinal: fmt::Display {
     ///
     /// ```rust
     /// use ordinal::Ordinal;
-    ///
     /// println!("{}", 12.ordinal());
     /// ```
     fn ordinal(&self) -> String {
