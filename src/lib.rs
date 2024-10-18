@@ -22,11 +22,13 @@ pub trait Ordinal: fmt::Display {
     fn suffix(&self) -> &'static str;
 }
 
+// TODO: Eliminate duplication of body with callback using abs() conditionally.
 macro_rules! impl_ordinal {
-    ($($t:ty)*) => {$(
+    (signed $($t:ty)*) => { $(
         impl $crate::Ordinal for $t {
             fn suffix(&self) -> &'static str {
-                let n = (*self % 20) as u8;
+                let n = (*self).abs();
+                let n = (n % 20) as u8;
                 if (11..=13).contains(&n) {
                     return "th";
                 }
@@ -39,11 +41,30 @@ macro_rules! impl_ordinal {
                 }
             }
         }
-    )*};
+    )* };
+
+    (unsigned $($t:ty)*) => { $(
+        impl $crate::Ordinal for $t {
+            fn suffix(&self) -> &'static str {
+                let n = *self;
+                let n = (n % 20) as u8;
+                if (11..=13).contains(&n) {
+                    return "th";
+                }
+
+                match (n % 10) {
+                    1 => "st",
+                    2 => "nd",
+                    3 => "rd",
+                    _ => "th",
+                }
+            }
+        }
+    )* };
 }
 
-impl_ordinal!(u8 u16 u32 u64 u128 usize);
-impl_ordinal!(i8 i16 i32 i64 i128 isize);
+impl_ordinal!(unsigned u8 u16 u32 u64 u128 usize);
+impl_ordinal!(signed i8 i16 i32 i64 i128 isize);
 
 #[test]
 fn test_fmt() {
@@ -59,6 +80,19 @@ fn test_fmt() {
     assert_eq!(9i64.ordinal(), "9th");
     assert_eq!(10i128.ordinal(), "10th");
     assert_eq!(11isize.ordinal(), "11th");
+
+    assert_eq!((-0i8).ordinal(), "0th");
+    assert_eq!((-1i16).ordinal(), "-1st");
+    assert_eq!((-2i32).ordinal(), "-2nd");
+    assert_eq!((-3i64).ordinal(), "-3rd");
+    assert_eq!((-4i128).ordinal(), "-4th");
+    assert_eq!((-5isize).ordinal(), "-5th");
+    assert_eq!((-6i8).ordinal(), "-6th");
+    assert_eq!((-7i16).ordinal(), "-7th");
+    assert_eq!((-8i32).ordinal(), "-8th");
+    assert_eq!((-9i64).ordinal(), "-9th");
+    assert_eq!((-10i128).ordinal(), "-10th");
+    assert_eq!((-11isize).ordinal(), "-11th");
 
     assert_eq!(19u8.ordinal(), "19th");
     assert_eq!(20u8.ordinal(), "20th");
@@ -102,6 +136,19 @@ fn test_suffix() {
     assert_eq!(9i64.suffix(), "th");
     assert_eq!(10i128.suffix(), "th");
     assert_eq!(11isize.suffix(), "th");
+
+    assert_eq!((-0i8).suffix(), "th");
+    assert_eq!((-1i16).suffix(), "st");
+    assert_eq!((-2i32).suffix(), "nd");
+    assert_eq!((-3i64).suffix(), "rd");
+    assert_eq!((-4i128).suffix(), "th");
+    assert_eq!((-5isize).suffix(), "th");
+    assert_eq!((-6i8).suffix(), "th");
+    assert_eq!((-7i16).suffix(), "th");
+    assert_eq!((-8i32).suffix(), "th");
+    assert_eq!((-9i64).suffix(), "th");
+    assert_eq!((-10i128).suffix(), "th");
+    assert_eq!((-11isize).suffix(), "th");
 
     assert_eq!(19u8.suffix(), "th");
     assert_eq!(20u8.suffix(), "th");
