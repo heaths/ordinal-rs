@@ -8,7 +8,7 @@ Format an integer as an ordinal:
 
 ```rust
 use ordinal::Ordinal;
-println!("{}", 12.ordinal());
+assert_eq!("12th", 12.ordinal());
 ```
 
 ## Performance
