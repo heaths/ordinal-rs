@@ -17,4 +17,13 @@ Compared to [github.com/gleich/ordinal](https://github.com/gleich/ordinal/commit
 
 ![violin plot](docs/suffix_violin_plot.svg)
 
+To [compare measurements](https://bheisler.github.io/criterion.rs/book/user_guide/command_line_options.html#baselines) across branches:
+
+```bash
+git checkout main
+cargo bench -- --save-baseline main
+git checkout feature
+cargo bench -- --baseline main
+```
+
 [^1]: Criterion does not have built-in memory profiling but when I find an impl of `Measurement` to do so - or find time to write one - I'll include those stats as well; however, take into consideration that this implementation does not allocate a string at all for `suffix()`.

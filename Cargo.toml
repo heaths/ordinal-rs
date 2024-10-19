@@ -9,6 +9,9 @@ publish = false
 [dev-dependencies]
 criterion = "0.5.1"
 
+[lib]
+bench = false
+
 [[bench]]
 name = "ordinal"
 harness = false

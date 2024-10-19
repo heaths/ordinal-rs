@@ -21,12 +21,11 @@ pub trait Ordinal: fmt::Display {
     fn suffix(&self) -> &'static str;
 }
 
-// TODO: Eliminate duplication of body with callback using abs() conditionally.
 macro_rules! impl_ordinal {
-    (signed $($t:ty)*) => { $(
+    ($($t:ty)*) => { $(
         impl $crate::Ordinal for $t {
             fn suffix(&self) -> &'static str {
-                let n = (*self).abs();
+                let n = Abs::abs(*self);
                 let n = (n % 20) as u8;
                 if (11..=13).contains(&n) {
                     return "th";
@@ -38,32 +37,38 @@ macro_rules! impl_ordinal {
                     3 => "rd",
                     _ => "th",
                 }
+            }
+        }
+    )* }
+}
+
+impl_ordinal!(u8 u16 u32 u64 u128 usize);
+impl_ordinal!(i8 i16 i32 i64 i128 isize);
+
+trait Abs<T> {
+    fn abs(self) -> T;
+}
+
+macro_rules! impl_abs {
+    (signed $($t:ty)*) => { $(
+        impl $crate::Abs<$t> for $t {
+            fn abs(self) -> $t {
+                self.abs()
             }
         }
     )* };
 
     (unsigned $($t:ty)*) => { $(
-        impl $crate::Ordinal for $t {
-            fn suffix(&self) -> &'static str {
-                let n = *self;
-                let n = (n % 20) as u8;
-                if (11..=13).contains(&n) {
-                    return "th";
-                }
-
-                match (n % 10) {
-                    1 => "st",
-                    2 => "nd",
-                    3 => "rd",
-                    _ => "th",
-                }
+        impl $crate::Abs<$t> for $t {
+            fn abs(self) -> $t {
+                self
             }
         }
     )* };
 }
 
-impl_ordinal!(unsigned u8 u16 u32 u64 u128 usize);
-impl_ordinal!(signed i8 i16 i32 i64 i128 isize);
+impl_abs!(unsigned u8 u16 u32 u64 u128 usize);
+impl_abs!(signed i8 i16 i32 i64 i128 isize);
 
 #[test]
 fn test_fmt() {
