@@ -1,31 +1,94 @@
 // Copyright 2023 Heath Stewart.
 // Licensed under the MIT License. See LICENSE.txt in the project root for license information.
 
-use core::fmt;
+use core::{fmt, ops::Deref};
+
+/// Represent numbers as ordinals when displayed.
+///
+/// # Exmples
+///
+/// ```
+/// use ordinal::Ordinal;
+/// let n = 12.to_number();
+/// assert_eq!(12, 12);
+/// assert_eq!(format!("{n}"), "12th");
+/// ```
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+pub struct Number<T: Ordinal + Copy>(T);
+
+impl<T: Ordinal + Copy> Number<T> {
+    /// Create a `Number` from the `value`.
+    ///
+    /// # Examples
+    ///
+    /// This can be used in constant initialization:
+    ///
+    /// ```
+    /// use ordinal::Number;
+    /// const TWELVE: Number<i32> = Number::new(12);
+    /// ```
+    pub const fn new(value: T) -> Self {
+        Number(value)
+    }
+}
+
+impl<T: Ordinal + Copy> Deref for Number<T> {
+    type Target = T;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl<T: Ordinal + Copy> fmt::Display for Number<T> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}{}", self.0, self.0.suffix())
+    }
+}
+
+impl<T: Ordinal + Copy> From<T> for Number<T> {
+    fn from(value: T) -> Self {
+        Number(value)
+    }
+}
 
 /// Format numbers as ordinals e.g., 1st, 12th, 21st, etc.
-pub trait Ordinal: fmt::Display {
+pub trait Ordinal: fmt::Display + Copy {
+    /// Get a [`Number`] formattable as an ordinal string.
+    ///
+    /// # Exmples
+    ///
+    /// ```
+    /// use ordinal::Ordinal;
+    /// let n = 12.to_number();
+    /// assert_eq!(12, 12);
+    /// assert_eq!(format!("{n}"), "12th");
+    /// ```
+    fn to_number(self) -> Number<Self> {
+        Number(self)
+    }
+
     /// Format a number as an ordinal. Implementations should not allocate.
     ///
     /// # Examples
     ///
-    /// ```rust
+    /// ```
     /// use ordinal::Ordinal;
     /// assert_eq!("12th", 12.to_ordinal());
     /// ```
-    fn to_ordinal(&self) -> String {
+    fn to_ordinal(self) -> String {
         format!("{}{}", self, self.suffix())
     }
 
     /// Gets the suffix for the number.
-    fn suffix(&self) -> &'static str;
+    fn suffix(self) -> &'static str;
 }
 
 macro_rules! impl_ordinal {
     ($($t:ty)*) => { $(
         impl $crate::Ordinal for $t {
-            fn suffix(&self) -> &'static str {
-                let n = Abs::abs(*self);
+            fn suffix(self) -> &'static str {
+                let n = Abs::abs(self);
                 let n = (n % 20) as u8;
                 if (11..=13).contains(&n) {
                     return "th";
@@ -69,6 +132,16 @@ macro_rules! impl_abs {
 
 impl_abs!(unsigned u8 u16 u32 u64 u128 usize);
 impl_abs!(signed i8 i16 i32 i64 i128 isize);
+
+#[test]
+fn test_number() {
+    const TWO: Number<i32> = Number::new(2);
+    let twelve = Number::from(12);
+
+    assert!(TWO < twelve);
+    assert_eq!(*twelve, 12);
+    assert_eq!(twelve.to_string(), String::from("12th"));
+}
 
 #[test]
 fn test_fmt() {
