@@ -11,9 +11,9 @@ pub trait Ordinal: fmt::Display {
     ///
     /// ```rust
     /// use ordinal::Ordinal;
-    /// assert_eq!("12th", 12.ordinal());
+    /// assert_eq!("12th", 12.to_ordinal());
     /// ```
-    fn ordinal(&self) -> String {
+    fn to_ordinal(&self) -> String {
         format!("{}{}", self, self.suffix())
     }
 
@@ -72,58 +72,58 @@ impl_abs!(signed i8 i16 i32 i64 i128 isize);
 
 #[test]
 fn test_fmt() {
-    assert_eq!(0u8.ordinal(), "0th");
-    assert_eq!(1u16.ordinal(), "1st");
-    assert_eq!(2u32.ordinal(), "2nd");
-    assert_eq!(3u64.ordinal(), "3rd");
-    assert_eq!(4u128.ordinal(), "4th");
-    assert_eq!(5usize.ordinal(), "5th");
-    assert_eq!(6i8.ordinal(), "6th");
-    assert_eq!(7i16.ordinal(), "7th");
-    assert_eq!(8i32.ordinal(), "8th");
-    assert_eq!(9i64.ordinal(), "9th");
-    assert_eq!(10i128.ordinal(), "10th");
-    assert_eq!(11isize.ordinal(), "11th");
+    assert_eq!(0u8.to_ordinal(), "0th");
+    assert_eq!(1u16.to_ordinal(), "1st");
+    assert_eq!(2u32.to_ordinal(), "2nd");
+    assert_eq!(3u64.to_ordinal(), "3rd");
+    assert_eq!(4u128.to_ordinal(), "4th");
+    assert_eq!(5usize.to_ordinal(), "5th");
+    assert_eq!(6i8.to_ordinal(), "6th");
+    assert_eq!(7i16.to_ordinal(), "7th");
+    assert_eq!(8i32.to_ordinal(), "8th");
+    assert_eq!(9i64.to_ordinal(), "9th");
+    assert_eq!(10i128.to_ordinal(), "10th");
+    assert_eq!(11isize.to_ordinal(), "11th");
 
-    assert_eq!((-0i8).ordinal(), "0th");
-    assert_eq!((-1i16).ordinal(), "-1st");
-    assert_eq!((-2i32).ordinal(), "-2nd");
-    assert_eq!((-3i64).ordinal(), "-3rd");
-    assert_eq!((-4i128).ordinal(), "-4th");
-    assert_eq!((-5isize).ordinal(), "-5th");
-    assert_eq!((-6i8).ordinal(), "-6th");
-    assert_eq!((-7i16).ordinal(), "-7th");
-    assert_eq!((-8i32).ordinal(), "-8th");
-    assert_eq!((-9i64).ordinal(), "-9th");
-    assert_eq!((-10i128).ordinal(), "-10th");
-    assert_eq!((-11isize).ordinal(), "-11th");
+    assert_eq!((-0i8).to_ordinal(), "0th");
+    assert_eq!((-1i16).to_ordinal(), "-1st");
+    assert_eq!((-2i32).to_ordinal(), "-2nd");
+    assert_eq!((-3i64).to_ordinal(), "-3rd");
+    assert_eq!((-4i128).to_ordinal(), "-4th");
+    assert_eq!((-5isize).to_ordinal(), "-5th");
+    assert_eq!((-6i8).to_ordinal(), "-6th");
+    assert_eq!((-7i16).to_ordinal(), "-7th");
+    assert_eq!((-8i32).to_ordinal(), "-8th");
+    assert_eq!((-9i64).to_ordinal(), "-9th");
+    assert_eq!((-10i128).to_ordinal(), "-10th");
+    assert_eq!((-11isize).to_ordinal(), "-11th");
 
-    assert_eq!(19u8.ordinal(), "19th");
-    assert_eq!(20u8.ordinal(), "20th");
-    assert_eq!(21u8.ordinal(), "21st");
-    assert_eq!(22u8.ordinal(), "22nd");
-    assert_eq!(23u8.ordinal(), "23rd");
-    assert_eq!(24u8.ordinal(), "24th");
+    assert_eq!(19u8.to_ordinal(), "19th");
+    assert_eq!(20u8.to_ordinal(), "20th");
+    assert_eq!(21u8.to_ordinal(), "21st");
+    assert_eq!(22u8.to_ordinal(), "22nd");
+    assert_eq!(23u8.to_ordinal(), "23rd");
+    assert_eq!(24u8.to_ordinal(), "24th");
 
-    assert_eq!(100u8.ordinal(), "100th");
-    assert_eq!(101u8.ordinal(), "101st");
+    assert_eq!(100u8.to_ordinal(), "100th");
+    assert_eq!(101u8.to_ordinal(), "101st");
 
-    assert_eq!(111u8.ordinal(), "111th");
-    assert_eq!(112u8.ordinal(), "112th");
+    assert_eq!(111u8.to_ordinal(), "111th");
+    assert_eq!(112u8.to_ordinal(), "112th");
 
-    assert_eq!(1001u32.ordinal(), "1001st");
-    assert_eq!(1002u32.ordinal(), "1002nd");
-    assert_eq!(1003u32.ordinal(), "1003rd");
-    assert_eq!(1004u32.ordinal(), "1004th");
+    assert_eq!(1001u32.to_ordinal(), "1001st");
+    assert_eq!(1002u32.to_ordinal(), "1002nd");
+    assert_eq!(1003u32.to_ordinal(), "1003rd");
+    assert_eq!(1004u32.to_ordinal(), "1004th");
 
-    assert_eq!(10001001u128.ordinal(), "10001001st");
-    assert_eq!(10001002u128.ordinal(), "10001002nd");
-    assert_eq!(10001003u128.ordinal(), "10001003rd");
-    assert_eq!(10001004u128.ordinal(), "10001004th");
+    assert_eq!(10001001u128.to_ordinal(), "10001001st");
+    assert_eq!(10001002u128.to_ordinal(), "10001002nd");
+    assert_eq!(10001003u128.to_ordinal(), "10001003rd");
+    assert_eq!(10001004u128.to_ordinal(), "10001004th");
 
-    assert_eq!(10001111u128.ordinal(), "10001111th");
-    assert_eq!(10001111u128.ordinal(), "10001111th");
-    assert_eq!(10001111u128.ordinal(), "10001111th");
+    assert_eq!(10001111u128.to_ordinal(), "10001111th");
+    assert_eq!(10001111u128.to_ordinal(), "10001111th");
+    assert_eq!(10001111u128.to_ordinal(), "10001111th");
 }
 
 #[test]

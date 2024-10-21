@@ -10,7 +10,7 @@ pub fn fmt(c: &mut Criterion) {
     let mut group = c.benchmark_group("fmt");
     for i in INPUTS {
         group.bench_with_input(BenchmarkId::new("ordinal", i), i, |b, i| {
-            b.iter(|| black_box(i.ordinal()))
+            b.iter(|| black_box(i.to_ordinal()))
         });
         group.bench_with_input(BenchmarkId::new("string_match", i), i, |b, i| {
             b.iter(|| black_box(ordinal_string_match(*i)))
