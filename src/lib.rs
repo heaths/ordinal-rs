@@ -8,72 +8,104 @@
 //!
 //! ## Examples
 //!
-//! Format a number as an ordinal, allocating a new `String`:
+//! Get an ordinal suffix without allocating.
 //!
-//! ```rust
+//! ```
 //! use ordinal_trait::Ordinal as _;
-//! assert_eq!(12.to_ordinal(), "12th");
+//! assert_eq!(12.suffix(), "th");
 //! ```
 //!
-//! Get a number representing an ordinal you can use with comparisons and formatting.
-//!
-//! ```rust
-//! use ordinal_trait::Ordinal as _;
-//! let n = 12.to_number();
-//! assert_eq!(*n, 12);
-//! assert_eq!(format!("{n}"), "12th");
-//! ```
+#![cfg_attr(
+    feature = "std",
+    doc = r##"
+Format a number as an ordinal, allocating a new `String`:
 
-use core::{fmt, ops::Deref};
+```
+use ordinal_trait::Ordinal as _;
+assert_eq!(12.to_ordinal(), "12th");
+```
 
-/// Represent numbers as ordinals when displayed.
-///
-/// # Examples
-///
-/// ```
-/// use ordinal_trait::Ordinal as _;
-/// let n = 12.to_number();
-/// assert_eq!(*n, 12);
-/// assert_eq!(format!("{n}"), "12th");
-/// ```
-#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
-pub struct Number<T: Ordinal + Copy>(T);
+Get a number representing an ordinal you can use with comparisons and formatting.
 
-impl<T: Ordinal + Copy> Number<T> {
-    /// Create a `Number` from the `value`.
+```
+use ordinal_trait::Ordinal as _;
+let n = 12.to_number();
+assert_eq!(*n, 12);
+assert_eq!(format!("{n}"), "12th");
+```
+"##
+)]
+#![cfg_attr(not(feature = "std"), no_std)]
+
+use core::fmt;
+
+#[cfg(feature = "std")]
+mod number {
+    use super::*;
+    use core::ops::Deref;
+
+    /// Represent numbers as ordinals when displayed.
     ///
     /// # Examples
     ///
-    /// This can be used in constant initialization:
-    ///
     /// ```
-    /// use ordinal_trait::Number;
-    /// const TWELVE: Number<i32> = Number::new(12);
+    /// use ordinal_trait::Ordinal as _;
+    /// let n = 12.to_number();
+    /// assert_eq!(*n, 12);
+    /// assert_eq!(format!("{n}"), "12th");
     /// ```
-    pub const fn new(value: T) -> Self {
-        Number(value)
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+    pub struct Number<T: Ordinal + Copy>(pub(crate) T);
+
+    impl<T: Ordinal + Copy> Number<T> {
+        /// Create a `Number` from the `value`.
+        ///
+        /// # Examples
+        ///
+        /// This can be used in constant initialization:
+        ///
+        /// ```
+        /// use ordinal_trait::Number;
+        /// const TWELVE: Number<i32> = Number::new(12);
+        /// ```
+        pub const fn new(value: T) -> Self {
+            Number(value)
+        }
+    }
+
+    impl<T: Ordinal + Copy> Deref for Number<T> {
+        type Target = T;
+
+        fn deref(&self) -> &Self::Target {
+            &self.0
+        }
+    }
+
+    impl<T: Ordinal + Copy> fmt::Display for Number<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "{}{}", self.0, self.0.suffix())
+        }
+    }
+
+    impl<T: Ordinal + Copy> From<T> for Number<T> {
+        fn from(value: T) -> Self {
+            Number(value)
+        }
+    }
+
+    #[test]
+    fn test_number() {
+        const TWO: Number<i32> = Number::new(2);
+        let twelve = Number::from(12);
+
+        assert!(TWO < twelve);
+        assert_eq!(*twelve, 12);
+        assert_eq!(twelve.to_string(), String::from("12th"));
     }
 }
 
-impl<T: Ordinal + Copy> Deref for Number<T> {
-    type Target = T;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-
-impl<T: Ordinal + Copy> fmt::Display for Number<T> {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}{}", self.0, self.0.suffix())
-    }
-}
-
-impl<T: Ordinal + Copy> From<T> for Number<T> {
-    fn from(value: T) -> Self {
-        Number(value)
-    }
-}
+#[cfg(feature = "std")]
+pub use number::Number;
 
 /// Format numbers as ordinals e.g., 1st, 12th, 21st, etc.
 pub trait Ordinal: fmt::Display + Copy {
@@ -87,6 +119,7 @@ pub trait Ordinal: fmt::Display + Copy {
     /// assert_eq!(12, 12);
     /// assert_eq!(format!("{n}"), "12th");
     /// ```
+    #[cfg(feature = "std")]
     fn to_number(self) -> Number<Self> {
         Number(self)
     }
@@ -96,14 +129,22 @@ pub trait Ordinal: fmt::Display + Copy {
     /// # Examples
     ///
     /// ```
-    /// use ordinal_trait::Ordinal;
-    /// assert_eq!("12th", 12.to_ordinal());
+    /// use ordinal_trait::Ordinal as _;
+    /// assert_eq!(12.to_ordinal(), "12th");
     /// ```
+    #[cfg(feature = "std")]
     fn to_ordinal(self) -> String {
         format!("{}{}", self, self.suffix())
     }
 
     /// Gets the suffix for the number.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use ordinal_trait::Ordinal as _;
+    /// assert_eq!(12.suffix(), "th");
+    /// ```
     fn suffix(self) -> &'static str;
 }
 
@@ -156,16 +197,7 @@ macro_rules! impl_abs {
 impl_abs!(unsigned u8 u16 u32 u64 u128 usize);
 impl_abs!(signed i8 i16 i32 i64 i128 isize);
 
-#[test]
-fn test_number() {
-    const TWO: Number<i32> = Number::new(2);
-    let twelve = Number::from(12);
-
-    assert!(TWO < twelve);
-    assert_eq!(*twelve, 12);
-    assert_eq!(twelve.to_string(), String::from("12th"));
-}
-
+#[cfg(feature = "std")]
 #[test]
 fn test_fmt() {
     assert_eq!(0u8.to_ordinal(), "0th");
@@ -278,6 +310,6 @@ fn test_suffix() {
     assert_eq!(10001111u128.suffix(), "th");
 }
 
+#[cfg(all(doctest, feature = "std"))]
 #[doc = include_str!("../README.md")]
-#[cfg(doctest)]
 struct ReadMe;

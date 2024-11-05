@@ -39,7 +39,9 @@ jobs:
     - name: Set up toolchain
       run: rustup show
     - name: Test
-      run: cargo test --all-features --workspace
+      run: |
+        cargo test --all-features --all-targets --workspace
+        cargo test --no-default-features --all-targets --workspace
   analyze:
     runs-on: ubuntu-latest
     steps:
@@ -60,7 +62,9 @@ jobs:
     - name: Check formatting
       run: cargo fmt --all -- --check
     - name: Lint
-      run: cargo clippy --all-features --all-targets --no-deps --workspace
+      run: |
+        cargo clippy --all-features --all-targets --no-deps --workspace
+        cargo clippy --no-default-features --all-targets --no-deps --workspace
     - name: Check spelling
       uses: streetsidesoftware/cspell-action@v6
       with:
