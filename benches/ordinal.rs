@@ -2,7 +2,7 @@
 // Licensed under the MIT License. See LICENSE.txt in the project root for license information.
 
 use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criterion};
-use ordinal::Ordinal;
+use ordinal_trait::Ordinal;
 
 const INPUTS: &[usize] = &[1usize, 2, 3, 12, 123_456_789];
 
