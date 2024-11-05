@@ -1,6 +1,29 @@
 // Copyright 2023 Heath Stewart.
 // Licensed under the MIT License. See LICENSE.txt in the project root for license information.
 
+//! # Ordinal formatting
+//!
+//! Format numbers as ordinals efficiently.
+//! You can get the ordinal suffix e.g., "st", "nd", "rd", or "th" without allocations.
+//!
+//! ## Examples
+//!
+//! Format a number as an ordinal, allocating a new `String`:
+//!
+//! ```rust
+//! use ordinal::Ordinal as _;
+//! assert_eq!(12.to_ordinal(), "12th");
+//! ```
+//!
+//! Get a number representing an ordinal you can use with comparisons and formatting.
+//!
+//! ```rust
+//! use ordinal::Ordinal as _;
+//! let n = 12.to_number();
+//! assert_eq!(*n, 12);
+//! assert_eq!(format!("{n}"), "12th");
+//! ```
+
 use core::{fmt, ops::Deref};
 
 /// Represent numbers as ordinals when displayed.
@@ -8,9 +31,9 @@ use core::{fmt, ops::Deref};
 /// # Exmples
 ///
 /// ```
-/// use ordinal::Ordinal;
+/// use ordinal::Ordinal as _;
 /// let n = 12.to_number();
-/// assert_eq!(12, 12);
+/// assert_eq!(*n, 12);
 /// assert_eq!(format!("{n}"), "12th");
 /// ```
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
@@ -59,7 +82,7 @@ pub trait Ordinal: fmt::Display + Copy {
     /// # Exmples
     ///
     /// ```
-    /// use ordinal::Ordinal;
+    /// use ordinal::Ordinal as _;
     /// let n = 12.to_number();
     /// assert_eq!(12, 12);
     /// assert_eq!(format!("{n}"), "12th");

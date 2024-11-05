@@ -4,11 +4,20 @@ An example of formatting ordinals e.g., 1st, 2nd, 3rd, 12th, etc., without strin
 
 ## Examples
 
-Format an integer as an ordinal:
+Format a number as an ordinal, allocating a new `String`:
 
 ```rust
-use ordinal::Ordinal;
-assert_eq!("12th", 12.to_ordinal());
+use ordinal::Ordinal as _;
+assert_eq!(12.to_ordinal(), "12th");
+```
+
+Get a number representing an ordinal you can use with comparisons and formatting.
+
+```rust
+use ordinal::Ordinal as _;
+let n = 12.to_number();
+assert_eq!(*n, 12);
+assert_eq!(format!("{n}"), "12th");
 ```
 
 ## Performance
@@ -22,6 +31,7 @@ To [compare measurements](https://bheisler.github.io/criterion.rs/book/user_guid
 ```bash
 git checkout main
 cargo bench -- --save-baseline main
+
 git checkout feature
 cargo bench -- --baseline main
 ```
