@@ -8,14 +8,14 @@ You can get the ordinal suffix e.g., "st", "nd", "rd", or "th" without allocatio
 Format a number as an ordinal, allocating a new `String`:
 
 ```rust
-use ordinal::Ordinal as _;
+use ordinal_trait::Ordinal as _;
 assert_eq!(12.to_ordinal(), "12th");
 ```
 
 Get a number representing an ordinal you can use with comparisons and formatting.
 
 ```rust
-use ordinal::Ordinal as _;
+use ordinal_trait::Ordinal as _;
 let n = 12.to_number();
 assert_eq!(*n, 12);
 assert_eq!(format!("{n}"), "12th");
@@ -23,7 +23,7 @@ assert_eq!(format!("{n}"), "12th");
 
 ## Performance
 
-Compared to [github.com/gleich/ordinal](https://github.com/gleich/ordinal/commit/a4bf9bdc37d05940f87d8ceea1c4b47cda0da5b4) or even [PR #3](https://github.com/gleich/ordinal/pull/3), this is much faster and does not allocate a string[^1].
+Compared to most other implementations that allocate a string just to check the last one or two characters, this implementation is much faster and does not allocate a string[^1].
 
 ![violin plot](docs/suffix_violin_plot.svg)
 

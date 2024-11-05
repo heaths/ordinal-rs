@@ -1,5 +1,5 @@
 [package]
-name = "ordinal"
+name = "ordinal-trait"
 version = "0.1.0"
 edition = "2021"
 authors = ["Heath Stewart (https://github.com/heaths)"]

@@ -11,14 +11,14 @@
 //! Format a number as an ordinal, allocating a new `String`:
 //!
 //! ```rust
-//! use ordinal::Ordinal as _;
+//! use ordinal_trait::Ordinal as _;
 //! assert_eq!(12.to_ordinal(), "12th");
 //! ```
 //!
 //! Get a number representing an ordinal you can use with comparisons and formatting.
 //!
 //! ```rust
-//! use ordinal::Ordinal as _;
+//! use ordinal_trait::Ordinal as _;
 //! let n = 12.to_number();
 //! assert_eq!(*n, 12);
 //! assert_eq!(format!("{n}"), "12th");
@@ -28,10 +28,10 @@ use core::{fmt, ops::Deref};
 
 /// Represent numbers as ordinals when displayed.
 ///
-/// # Exmples
+/// # Examples
 ///
 /// ```
-/// use ordinal::Ordinal as _;
+/// use ordinal_trait::Ordinal as _;
 /// let n = 12.to_number();
 /// assert_eq!(*n, 12);
 /// assert_eq!(format!("{n}"), "12th");
@@ -47,7 +47,7 @@ impl<T: Ordinal + Copy> Number<T> {
     /// This can be used in constant initialization:
     ///
     /// ```
-    /// use ordinal::Number;
+    /// use ordinal_trait::Number;
     /// const TWELVE: Number<i32> = Number::new(12);
     /// ```
     pub const fn new(value: T) -> Self {
@@ -79,10 +79,10 @@ impl<T: Ordinal + Copy> From<T> for Number<T> {
 pub trait Ordinal: fmt::Display + Copy {
     /// Get a [`Number`] formattable as an ordinal string.
     ///
-    /// # Exmples
+    /// # Examples
     ///
     /// ```
-    /// use ordinal::Ordinal as _;
+    /// use ordinal_trait::Ordinal as _;
     /// let n = 12.to_number();
     /// assert_eq!(12, 12);
     /// assert_eq!(format!("{n}"), "12th");
@@ -96,7 +96,7 @@ pub trait Ordinal: fmt::Display + Copy {
     /// # Examples
     ///
     /// ```
-    /// use ordinal::Ordinal;
+    /// use ordinal_trait::Ordinal;
     /// assert_eq!("12th", 12.to_ordinal());
     /// ```
     fn to_ordinal(self) -> String {
