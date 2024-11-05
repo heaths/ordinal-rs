@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "editorconfig.editorconfig",
+    "rust-lang.rust-analyzer",
+    "streetsidesoftware.code-spell-checker",
+    "vadimcn.vscode-lldb"
+  ]
+}
