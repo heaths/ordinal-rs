@@ -1,6 +1,7 @@
-# Formatting ordinals
+# Ordinal formatting
 
-An example of formatting ordinals e.g., 1st, 2nd, 3rd, 12th, etc., without string allocations.
+Format numbers as ordinals efficiently.
+You can get the ordinal suffix e.g., "st", "nd", "rd", or "th" without allocations.
 
 ## Examples
 
