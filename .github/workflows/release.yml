@@ -19,8 +19,6 @@ env:
 jobs:
   test:
     uses: ./.github/workflows/ci.yml
-    with:
-      release: true
 
   publish:
     runs-on: ubuntu-latest
