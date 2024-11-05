@@ -4,7 +4,14 @@ version = "0.1.0"
 edition = "2021"
 authors = ["Heath Stewart (https://github.com/heaths)"]
 license = "MIT"
-publish = false
+description = "Format numbers as ordinals efficiently."
+repository = "https://github.com/heaths/ordinal-rs"
+keywords = ["number", "ordinal"]
+categories = ["no-std", "value-formatting"]
+
+[features]
+default = ["std"]
+std = []
 
 [dev-dependencies]
 criterion = "0.5.1"
@@ -15,3 +22,4 @@ bench = false
 [[bench]]
 name = "ordinal"
 harness = false
+required-features = ["std"]
