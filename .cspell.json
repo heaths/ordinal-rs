@@ -1,0 +1,36 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "useGitignore": true,
+  "ignorePaths": [
+    ".github/",
+    ".vscode/",
+    "rust-toolchain.toml"
+  ],
+  "words": [
+    "clippy",
+    "rustlang",
+    "rustup"
+  ],
+  "overrides": [
+    {
+      "filename": "**/*.md",
+      "dictionaries": [
+        "rust"
+      ]
+    },
+    {
+      "filename": "**/*.rs",
+      "words": [
+        "doctest",
+        "repr"
+      ]
+    },
+    {
+      "filename": "**/*.svg",
+      "words": [
+        "polyline"
+      ]
+    }
+  ]
+}
