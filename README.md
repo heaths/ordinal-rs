@@ -8,15 +8,15 @@ You can get the ordinal suffix e.g., "st", "nd", "rd", or "th" without allocatio
 Format a number as an ordinal, allocating a new `String`:
 
 ```rust
-use ordinal_trait::Ordinal as _;
-assert_eq!(12.to_ordinal(), "12th");
+use ordinal_trait::ToOrdinal as _;
+assert_eq!(12.to_ordinal_string(), "12th");
 ```
 
 Get a number representing an ordinal you can use with comparisons and formatting.
 
 ```rust
-use ordinal_trait::Ordinal as _;
-let n = 12.to_number();
+use ordinal_trait::ToOrdinal as _;
+let n = 12.to_ordinal();
 assert_eq!(*n, 12);
 assert_eq!(format!("{n}"), "12th");
 ```

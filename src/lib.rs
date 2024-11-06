@@ -11,7 +11,7 @@
 //! Get an ordinal suffix without allocating.
 //!
 //! ```
-//! use ordinal_trait::Ordinal as _;
+//! use ordinal_trait::ToOrdinal as _;
 //! assert_eq!(12.suffix(), "th");
 //! ```
 //!
@@ -21,15 +21,15 @@
 Format a number as an ordinal, allocating a new `String`:
 
 ```
-use ordinal_trait::Ordinal as _;
-assert_eq!(12.to_ordinal(), "12th");
+use ordinal_trait::ToOrdinal as _;
+assert_eq!(12.to_ordinal_string(), "12th");
 ```
 
 Get a number representing an ordinal you can use with comparisons and formatting.
 
 ```
-use ordinal_trait::Ordinal as _;
-let n = 12.to_number();
+use ordinal_trait::ToOrdinal as _;
+let n = 12.to_ordinal();
 assert_eq!(*n, 12);
 assert_eq!(format!("{n}"), "12th");
 ```
@@ -59,32 +59,39 @@ mod number {
     ///
     /// # Examples
     ///
+    /// Get a `Number` from an integer that implements [`ToOrdinal`].
+    ///
     /// ```
-    /// use ordinal_trait::Ordinal as _;
-    /// let n = 12.to_number();
+    /// use ordinal_trait::ToOrdinal as _;
+    /// let n = 12.to_ordinal();
     /// assert_eq!(*n, 12);
     /// assert_eq!(format!("{n}"), "12th");
     /// ```
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
-    pub struct Number<T: Ordinal + Copy>(pub(crate) T);
+    ///
+    /// You can also create a `Number` in a `const` expression.
+    ///
+    /// ```
+    /// use ordinal_trait::Ordinal;
+    /// const TWELVE: Ordinal<i32> = Ordinal(12);
+    /// ```
+    #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
+    pub struct Ordinal<T: ToOrdinal>(pub T);
 
-    impl<T: Ordinal + Copy> Number<T> {
-        /// Create a `Number` from the `value`.
+    impl<T: ToOrdinal> Ordinal<T> {
+        /// Gets the suffix for the number.
         ///
         /// # Examples
         ///
-        /// This can be used in constant initialization:
-        ///
         /// ```
-        /// use ordinal_trait::Number;
-        /// const TWELVE: Number<i32> = Number::new(12);
+        /// use ordinal_trait::Ordinal;
+        /// assert_eq!(Ordinal(12).suffix(), "th");
         /// ```
-        pub const fn new(value: T) -> Self {
-            Number(value)
+        pub fn suffix(&self) -> &'static str {
+            self.0.suffix()
         }
     }
 
-    impl<T: Ordinal + Copy> Deref for Number<T> {
+    impl<T: ToOrdinal> Deref for Ordinal<T> {
         type Target = T;
 
         fn deref(&self) -> &Self::Target {
@@ -92,22 +99,22 @@ mod number {
         }
     }
 
-    impl<T: Ordinal + Copy> fmt::Display for Number<T> {
+    impl<T: ToOrdinal> fmt::Display for Ordinal<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "{}{}", self.0, self.0.suffix())
         }
     }
 
-    impl<T: Ordinal + Copy> From<T> for Number<T> {
+    impl<T: ToOrdinal> From<T> for Ordinal<T> {
         fn from(value: T) -> Self {
-            Number(value)
+            Ordinal(value)
         }
     }
 
     #[test]
     fn test_number() {
-        const TWO: Number<i32> = Number::new(2);
-        let twelve = Number::from(12);
+        const TWO: Ordinal<i32> = Ordinal(2);
+        let twelve = Ordinal::from(12);
 
         assert!(TWO < twelve);
         assert_eq!(*twelve, 12);
@@ -116,23 +123,23 @@ mod number {
 }
 
 #[cfg(feature = "alloc")]
-pub use number::Number;
+pub use number::Ordinal;
 
 /// Format numbers as ordinals e.g., 1st, 12th, 21st, etc.
-pub trait Ordinal: fmt::Display + Copy {
-    /// Get a [`Number`] formattable as an ordinal string.
+pub trait ToOrdinal: fmt::Display + Copy {
+    /// Get a [`Ordinal`] to format as an ordinal string.
     ///
     /// # Examples
     ///
     /// ```
-    /// use ordinal_trait::Ordinal as _;
-    /// let n = 12.to_number();
+    /// use ordinal_trait::ToOrdinal as _;
+    /// let n = 12.to_ordinal();
     /// assert_eq!(12, 12);
     /// assert_eq!(format!("{n}"), "12th");
     /// ```
     #[cfg(feature = "alloc")]
-    fn to_number(self) -> Number<Self> {
-        Number(self)
+    fn to_ordinal(self) -> Ordinal<Self> {
+        Ordinal(self)
     }
 
     /// Format a number as an ordinal. Implementations should not allocate.
@@ -140,11 +147,11 @@ pub trait Ordinal: fmt::Display + Copy {
     /// # Examples
     ///
     /// ```
-    /// use ordinal_trait::Ordinal as _;
-    /// assert_eq!(12.to_ordinal(), "12th");
+    /// use ordinal_trait::ToOrdinal as _;
+    /// assert_eq!(12.to_ordinal_string(), "12th");
     /// ```
     #[cfg(feature = "alloc")]
-    fn to_ordinal(self) -> String {
+    fn to_ordinal_string(self) -> String {
         format!("{}{}", self, self.suffix())
     }
 
@@ -153,7 +160,7 @@ pub trait Ordinal: fmt::Display + Copy {
     /// # Examples
     ///
     /// ```
-    /// use ordinal_trait::Ordinal as _;
+    /// use ordinal_trait::ToOrdinal as _;
     /// assert_eq!(12.suffix(), "th");
     /// ```
     fn suffix(self) -> &'static str;
@@ -161,7 +168,7 @@ pub trait Ordinal: fmt::Display + Copy {
 
 macro_rules! impl_ordinal {
     ($($t:ty)*) => { $(
-        impl $crate::Ordinal for $t {
+        impl $crate::ToOrdinal for $t {
             fn suffix(self) -> &'static str {
                 let n = Abs::abs(self);
                 let n = (n % 20) as u8;
@@ -211,58 +218,58 @@ impl_abs!(signed i8 i16 i32 i64 i128 isize);
 #[cfg(feature = "alloc")]
 #[test]
 fn test_fmt() {
-    assert_eq!(0u8.to_ordinal(), "0th");
-    assert_eq!(1u16.to_ordinal(), "1st");
-    assert_eq!(2u32.to_ordinal(), "2nd");
-    assert_eq!(3u64.to_ordinal(), "3rd");
-    assert_eq!(4u128.to_ordinal(), "4th");
-    assert_eq!(5usize.to_ordinal(), "5th");
-    assert_eq!(6i8.to_ordinal(), "6th");
-    assert_eq!(7i16.to_ordinal(), "7th");
-    assert_eq!(8i32.to_ordinal(), "8th");
-    assert_eq!(9i64.to_ordinal(), "9th");
-    assert_eq!(10i128.to_ordinal(), "10th");
-    assert_eq!(11isize.to_ordinal(), "11th");
+    assert_eq!(0u8.to_ordinal_string(), "0th");
+    assert_eq!(1u16.to_ordinal_string(), "1st");
+    assert_eq!(2u32.to_ordinal_string(), "2nd");
+    assert_eq!(3u64.to_ordinal_string(), "3rd");
+    assert_eq!(4u128.to_ordinal_string(), "4th");
+    assert_eq!(5usize.to_ordinal_string(), "5th");
+    assert_eq!(6i8.to_ordinal_string(), "6th");
+    assert_eq!(7i16.to_ordinal_string(), "7th");
+    assert_eq!(8i32.to_ordinal_string(), "8th");
+    assert_eq!(9i64.to_ordinal_string(), "9th");
+    assert_eq!(10i128.to_ordinal_string(), "10th");
+    assert_eq!(11isize.to_ordinal_string(), "11th");
 
-    assert_eq!((-0i8).to_ordinal(), "0th");
-    assert_eq!((-1i16).to_ordinal(), "-1st");
-    assert_eq!((-2i32).to_ordinal(), "-2nd");
-    assert_eq!((-3i64).to_ordinal(), "-3rd");
-    assert_eq!((-4i128).to_ordinal(), "-4th");
-    assert_eq!((-5isize).to_ordinal(), "-5th");
-    assert_eq!((-6i8).to_ordinal(), "-6th");
-    assert_eq!((-7i16).to_ordinal(), "-7th");
-    assert_eq!((-8i32).to_ordinal(), "-8th");
-    assert_eq!((-9i64).to_ordinal(), "-9th");
-    assert_eq!((-10i128).to_ordinal(), "-10th");
-    assert_eq!((-11isize).to_ordinal(), "-11th");
+    assert_eq!((-0i8).to_ordinal_string(), "0th");
+    assert_eq!((-1i16).to_ordinal_string(), "-1st");
+    assert_eq!((-2i32).to_ordinal_string(), "-2nd");
+    assert_eq!((-3i64).to_ordinal_string(), "-3rd");
+    assert_eq!((-4i128).to_ordinal_string(), "-4th");
+    assert_eq!((-5isize).to_ordinal_string(), "-5th");
+    assert_eq!((-6i8).to_ordinal_string(), "-6th");
+    assert_eq!((-7i16).to_ordinal_string(), "-7th");
+    assert_eq!((-8i32).to_ordinal_string(), "-8th");
+    assert_eq!((-9i64).to_ordinal_string(), "-9th");
+    assert_eq!((-10i128).to_ordinal_string(), "-10th");
+    assert_eq!((-11isize).to_ordinal_string(), "-11th");
 
-    assert_eq!(19u8.to_ordinal(), "19th");
-    assert_eq!(20u8.to_ordinal(), "20th");
-    assert_eq!(21u8.to_ordinal(), "21st");
-    assert_eq!(22u8.to_ordinal(), "22nd");
-    assert_eq!(23u8.to_ordinal(), "23rd");
-    assert_eq!(24u8.to_ordinal(), "24th");
+    assert_eq!(19u8.to_ordinal_string(), "19th");
+    assert_eq!(20u8.to_ordinal_string(), "20th");
+    assert_eq!(21u8.to_ordinal_string(), "21st");
+    assert_eq!(22u8.to_ordinal_string(), "22nd");
+    assert_eq!(23u8.to_ordinal_string(), "23rd");
+    assert_eq!(24u8.to_ordinal_string(), "24th");
 
-    assert_eq!(100u8.to_ordinal(), "100th");
-    assert_eq!(101u8.to_ordinal(), "101st");
+    assert_eq!(100u8.to_ordinal_string(), "100th");
+    assert_eq!(101u8.to_ordinal_string(), "101st");
 
-    assert_eq!(111u8.to_ordinal(), "111th");
-    assert_eq!(112u8.to_ordinal(), "112th");
+    assert_eq!(111u8.to_ordinal_string(), "111th");
+    assert_eq!(112u8.to_ordinal_string(), "112th");
 
-    assert_eq!(1001u32.to_ordinal(), "1001st");
-    assert_eq!(1002u32.to_ordinal(), "1002nd");
-    assert_eq!(1003u32.to_ordinal(), "1003rd");
-    assert_eq!(1004u32.to_ordinal(), "1004th");
+    assert_eq!(1001u32.to_ordinal_string(), "1001st");
+    assert_eq!(1002u32.to_ordinal_string(), "1002nd");
+    assert_eq!(1003u32.to_ordinal_string(), "1003rd");
+    assert_eq!(1004u32.to_ordinal_string(), "1004th");
 
-    assert_eq!(10001001u128.to_ordinal(), "10001001st");
-    assert_eq!(10001002u128.to_ordinal(), "10001002nd");
-    assert_eq!(10001003u128.to_ordinal(), "10001003rd");
-    assert_eq!(10001004u128.to_ordinal(), "10001004th");
+    assert_eq!(10001001u128.to_ordinal_string(), "10001001st");
+    assert_eq!(10001002u128.to_ordinal_string(), "10001002nd");
+    assert_eq!(10001003u128.to_ordinal_string(), "10001003rd");
+    assert_eq!(10001004u128.to_ordinal_string(), "10001004th");
 
-    assert_eq!(10001111u128.to_ordinal(), "10001111th");
-    assert_eq!(10001111u128.to_ordinal(), "10001111th");
-    assert_eq!(10001111u128.to_ordinal(), "10001111th");
+    assert_eq!(10001111u128.to_ordinal_string(), "10001111th");
+    assert_eq!(10001111u128.to_ordinal_string(), "10001111th");
+    assert_eq!(10001111u128.to_ordinal_string(), "10001111th");
 }
 
 #[test]

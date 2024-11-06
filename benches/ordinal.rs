@@ -5,7 +5,7 @@ use criterion::{
     black_box, criterion_group, criterion_main, profiler::Profiler, BenchmarkId, Criterion,
 };
 use num_format::{Locale, ToFormattedString as _};
-use ordinal_trait::Ordinal;
+use ordinal_trait::ToOrdinal;
 use std::{
     alloc::{GlobalAlloc, System},
     sync::atomic::{AtomicUsize, Ordering},
@@ -20,7 +20,7 @@ pub fn fmt(c: &mut Criterion) {
     let mut group = c.benchmark_group("fmt");
     for i in INPUTS {
         group.bench_with_input(BenchmarkId::new("ordinal-trait", i), i, |b, i| {
-            b.iter(|| black_box(format!("{}", i.to_number())))
+            b.iter(|| black_box(i.to_ordinal_string()))
         });
         group.bench_with_input(BenchmarkId::new("num-ordinal", i), i, |b, i| {
             // cspell:ignore Osize

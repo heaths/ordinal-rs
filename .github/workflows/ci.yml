@@ -47,6 +47,7 @@ jobs:
       run: |
         cargo test --no-default-features --all-targets --workspace
         cargo test --no-default-features --features alloc --all-targets --workspace
+        cargo test --no-default-features --doc --workspace
   analyze:
     runs-on: ubuntu-latest
     steps:
