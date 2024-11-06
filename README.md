@@ -21,6 +21,18 @@ assert_eq!(*n, 12);
 assert_eq!(format!("{n}"), "12th");
 ```
 
+## Features
+
+* **std**: (default) all functionality enabled.
+* **alloc**: (default; enabled by **std**) all functionality enabled.
+
+This crate supports `no_std`, though functionality is limited. If you disable default features, `no_std` will be enabled.
+You can optionally add feature `alloc` (enabled by default with `std`) to enable all functionality without requiring `std`.
+
+```bash
+cargo add ordinal-trait --no-default-features --features alloc
+```
+
 ## Performance
 
 Compared to most other implementations that allocate a string just to check the last one or two characters, this implementation is much faster and does not allocate a string[^1].
