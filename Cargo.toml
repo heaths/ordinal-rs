@@ -11,7 +11,8 @@ categories = ["no-std", "value-formatting"]
 
 [features]
 default = ["std"]
-std = []
+alloc = []
+std = ["alloc"]
 
 [dev-dependencies]
 criterion = "0.5.1"

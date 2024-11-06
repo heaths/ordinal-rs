@@ -39,10 +39,14 @@ jobs:
         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
     - name: Set up toolchain
       run: rustup show
-    - name: Test
+    - name: Test all features
       run: |
         cargo test --all-features --all-targets --workspace
+        cargo test --all-features --doc --workspace
+    - name: Test non-default features
+      run: |
         cargo test --no-default-features --all-targets --workspace
+        cargo test --no-default-features --features alloc --all-targets --workspace
   analyze:
     runs-on: ubuntu-latest
     steps:

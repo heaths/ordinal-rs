@@ -16,7 +16,7 @@
 //! ```
 //!
 #![cfg_attr(
-    feature = "std",
+    feature = "alloc",
     doc = r##"
 Format a number as an ordinal, allocating a new `String`:
 
@@ -37,9 +37,20 @@ assert_eq!(format!("{n}"), "12th");
 )]
 #![cfg_attr(not(feature = "std"), no_std)]
 
+#[cfg(feature = "alloc")]
+extern crate alloc;
+#[cfg(feature = "std")]
+extern crate std;
+
+#[allow(unused_imports)]
+#[cfg(feature = "alloc")]
+use alloc::{
+    format,
+    string::{String, ToString as _},
+};
 use core::fmt;
 
-#[cfg(feature = "std")]
+#[cfg(feature = "alloc")]
 mod number {
     use super::*;
     use core::ops::Deref;
@@ -104,7 +115,7 @@ mod number {
     }
 }
 
-#[cfg(feature = "std")]
+#[cfg(feature = "alloc")]
 pub use number::Number;
 
 /// Format numbers as ordinals e.g., 1st, 12th, 21st, etc.
@@ -119,7 +130,7 @@ pub trait Ordinal: fmt::Display + Copy {
     /// assert_eq!(12, 12);
     /// assert_eq!(format!("{n}"), "12th");
     /// ```
-    #[cfg(feature = "std")]
+    #[cfg(feature = "alloc")]
     fn to_number(self) -> Number<Self> {
         Number(self)
     }
@@ -132,7 +143,7 @@ pub trait Ordinal: fmt::Display + Copy {
     /// use ordinal_trait::Ordinal as _;
     /// assert_eq!(12.to_ordinal(), "12th");
     /// ```
-    #[cfg(feature = "std")]
+    #[cfg(feature = "alloc")]
     fn to_ordinal(self) -> String {
         format!("{}{}", self, self.suffix())
     }
@@ -197,7 +208,7 @@ macro_rules! impl_abs {
 impl_abs!(unsigned u8 u16 u32 u64 u128 usize);
 impl_abs!(signed i8 i16 i32 i64 i128 isize);
 
-#[cfg(feature = "std")]
+#[cfg(feature = "alloc")]
 #[test]
 fn test_fmt() {
     assert_eq!(0u8.to_ordinal(), "0th");
