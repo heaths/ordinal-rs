@@ -2,7 +2,7 @@
 // Licensed under the MIT License. See LICENSE.txt in the project root for license information.
 
 use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criterion};
-use ordinal_trait::Ordinal;
+use ordinal_trait::ToOrdinal;
 
 const INPUTS: &[usize] = &[1usize, 2, 3, 12, 123_456_789];
 
@@ -10,7 +10,7 @@ pub fn fmt(c: &mut Criterion) {
     let mut group = c.benchmark_group("fmt");
     for i in INPUTS {
         group.bench_with_input(BenchmarkId::new("ordinal", i), i, |b, i| {
-            b.iter(|| black_box(i.to_ordinal()))
+            b.iter(|| black_box(i.to_ordinal_string()))
         });
         group.bench_with_input(BenchmarkId::new("string_match", i), i, |b, i| {
             b.iter(|| black_box(ordinal_string_match(*i)))
