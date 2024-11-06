@@ -43,6 +43,7 @@ jobs:
       run: |
         cargo test --all-features --all-targets --workspace
         cargo test --no-default-features --all-targets --workspace
+        cargo test --all-features --doc --workspace
   analyze:
     runs-on: ubuntu-latest
     steps:
