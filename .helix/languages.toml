@@ -15,4 +15,3 @@ auto-format = true
 [[language]]
 name = "toml"
 auto-format = true
-indent = { tab-width = 2, unit = "  " }

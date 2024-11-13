@@ -16,6 +16,9 @@ std = ["alloc"]
 
 [dev-dependencies]
 criterion = "0.5.1"
+num-ordinal = "0.2.0"
+ordinal = "0.3.2"
+ordinal-type = "0.3.0"
 
 [lib]
 bench = false
