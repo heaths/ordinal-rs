@@ -242,6 +242,21 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "78ca9ab1a0babb1e7d5695e3530886289c18cf2f87ec19a575a0abdce112e3a3"
 
 [[package]]
+name = "num-integer"
+version = "0.1.46"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7969661fd2958a5cb096e56c8e1ad0444ac2bbcd0061bd28660485a44879858f"
+dependencies = [
+ "num-traits",
+]
+
+[[package]]
+name = "num-ordinal"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0b244f65fa4ff30000abd52b6f916061f852b907cc17de811639c1aa2418eab6"
+
+[[package]]
 name = "num-traits"
 version = "0.2.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -263,10 +278,32 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b410bbe7e14ab526a0e86877eb47c6996a2bd7746f027ba551028c925390e4e9"
 
 [[package]]
+name = "ordinal"
+version = "0.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c80c1530f46e9d8985706d7deb80b83172b250538902f607dea6cd6028851083"
+dependencies = [
+ "num-integer",
+]
+
+[[package]]
 name = "ordinal-trait"
 version = "0.1.0"
 dependencies = [
  "criterion",
+ "num-ordinal",
+ "ordinal",
+ "ordinal-type",
+]
+
+[[package]]
+name = "ordinal-type"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e6e69a1a73a33ae41be74e9f3f9228b37492e39beac836ca80d42ce72d1b7e8b"
+dependencies = [
+ "num-integer",
+ "num-traits",
 ]
 
 [[package]]
