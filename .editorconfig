@@ -11,3 +11,6 @@ indent_size = 2
 
 [*.{yml,yaml}]
 indent_size = 2
+
+[*.{xml,xslt}]
+indent_size = 2

@@ -3,14 +3,20 @@
   "language": "en",
   "useGitignore": true,
   "ignorePaths": [
+    ".cspell.json",
     ".github/",
     ".vscode/",
+    "docs/**/*.svg",
+    "docs/**/*.xslt",
     "rust-toolchain.toml"
   ],
   "words": [
     "clippy",
+    "docgen",
     "rustlang",
-    "rustup"
+    "rustup",
+    "xrust",
+    "xtask"
   ],
   "overrides": [
     {
@@ -24,12 +30,6 @@
       "words": [
         "doctest",
         "repr"
-      ]
-    },
-    {
-      "filename": "**/*.svg",
-      "words": [
-        "polyline"
       ]
     }
   ]
