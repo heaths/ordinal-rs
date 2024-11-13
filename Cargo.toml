@@ -27,3 +27,7 @@ bench = false
 name = "ordinal"
 harness = false
 required-features = ["std"]
+
+[workspace]
+resolver = "2"
+members = ["xtask"]
