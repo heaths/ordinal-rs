@@ -40,12 +40,12 @@ polygon.self { fill: #00cf00 }
   </xsl:template>
 
   <!-- Get Y axis values of our own svg:text nodes. -->
-  <xsl:key name="yaxes" match="/svg:svg/svg:text[str:tokenize(text(), '/')[2] = 'ordinal-trait']" use="@y"/>
+  <xsl:key name="yaxes" match="/svg:svg/svg:text[str:tokenize(text(), '/')[2] = 'ordinal-trait']" use="number(@y)"/>
   <xsl:template match="svg:polygon">
     <xsl:copy>
-      <xsl:variable name="y" select="str:tokenize(str:tokenize(@points, ' ')[1], ',')[2]"/>
+      <xsl:variable name="y" select="number(str:tokenize(str:tokenize(@points, ' ')[1], ',')[2])"/>
       <!-- Generate reports' y axis might be off by one. -->
-      <xsl:if test="key('yaxes', number($y)) | key('yaxes', number($y) - 1) | key('yaxes', number($y) + 1)">
+      <xsl:if test="key('yaxes', $y) | key('yaxes', $y - 1) | key('yaxes', $y + 1)">
         <xsl:attribute name="class">self</xsl:attribute>
       </xsl:if>
       <xsl:apply-templates select="node() | @*"/>
