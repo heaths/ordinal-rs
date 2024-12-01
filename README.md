@@ -39,6 +39,10 @@ Compared to most other implementations that allocate a string just to check the 
 
 ![violin plot](docs/suffix_violin_plot.svg)
 
+Formatting ordinals builds on this strategy and is faster than most other implementations:
+
+![violin plot](docs/fmt_violin_plot.svg)
+
 To [compare measurements](https://bheisler.github.io/criterion.rs/book/user_guide/command_line_options.html#baselines) across branches:
 
 ```bash
