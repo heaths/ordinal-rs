@@ -3,8 +3,11 @@
   "language": "en",
   "useGitignore": true,
   "ignorePaths": [
+    ".cspell.json",
     ".github/",
     ".vscode/",
+    "docs/**/*.svg",
+    "docs/**/*.xslt",
     "rust-toolchain.toml"
   ],
   "words": [
@@ -17,6 +20,9 @@
       "filename": "**/*.md",
       "dictionaries": [
         "rust"
+      ],
+      "words": [
+        "xsltproc"
       ]
     },
     {
@@ -24,12 +30,6 @@
       "words": [
         "doctest",
         "repr"
-      ]
-    },
-    {
-      "filename": "**/*.svg",
-      "words": [
-        "polyline"
       ]
     }
   ]
