@@ -4,6 +4,7 @@
   "useGitignore": true,
   "ignorePaths": [
     ".cspell.json",
+    ".devcontainer/",
     ".github/",
     ".vscode/",
     "docs/**/*.svg",
