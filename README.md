@@ -35,7 +35,7 @@ cargo add ordinal-trait --no-default-features --features alloc
 
 ## Performance
 
-Compared to most other implementations that allocate a string just to check the last one or two characters, this implementation is much faster and does not allocate a string[^1].
+Compared to most other implementations that allocate a string just to check the last one or two characters, this implementation is much faster and does not allocate a string.
 
 ![violin plot](docs/suffix_violin_plot.svg)
 
@@ -53,4 +53,25 @@ git checkout feature
 cargo bench -- --baseline main
 ```
 
-[^1]: Criterion does not have built-in memory profiling but when I find an impl of `Measurement` to do so - or find time to write one - I'll include those stats as well; however, take into consideration that this implementation does not allocate a string at all for `suffix()`.
+## Memory profiling
+
+Criterion does not support memory profiling as of 0.5.1; however, I have implemented a simple solution using a global
+allocator. When run with `--profile-time <number of seconds>`, the total number of bytes allocated from the heap will
+be written to the terminal in kibibytes. This may include heap allocations for Criterion itself, but should be limited
+to just before and after each benchmark.
+
+```bash
+cargo bench -- suffix --profile-time 3
+```
+
+Would print something like:
+
+```text
+Benchmarking suffix/ordinal-trait/1: Profiling for 3.0000 s; allocated 0 KiB
+Benchmarking suffix/ordinal-trait/1: Complete (Analysis Disabled)
+Benchmarking suffix/ordinal/1: Profiling for 3.0000 s; allocated 958,951 KiB
+Benchmarking suffix/ordinal/1: Complete (Analysis Disabled)
+Benchmarking suffix/ordinal-type/1: Profiling for 3.0000 s; allocated 949,659 KiB
+Benchmarking suffix/ordinal-type/1: Complete (Analysis Disabled)
+...
+```
