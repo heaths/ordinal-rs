@@ -12,6 +12,7 @@
     "rust-toolchain.toml"
   ],
   "words": [
+    "chrono",
     "clippy",
     "kibibytes",
     "rustlang",
