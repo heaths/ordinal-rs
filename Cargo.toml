@@ -28,6 +28,10 @@ ordinal-type = "0.3.0"
 [lib]
 bench = false
 
+[profile.release]
+panic = "abort"
+strip = "symbols"
+
 [[bench]]
 name = "ordinal"
 harness = false
