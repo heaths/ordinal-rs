@@ -11,7 +11,7 @@
 //! Get an ordinal suffix without allocating.
 //!
 //! ```
-//! use ordinal_trait::ToOrdinal as _;
+//! use ordinal::ToOrdinal as _;
 //! assert_eq!(12.suffix(), "th");
 //! ```
 //!
@@ -21,14 +21,14 @@
 Format a number as an ordinal, allocating a new `String`:
 
 ```
-use ordinal_trait::ToOrdinal as _;
+use ordinal::ToOrdinal as _;
 assert_eq!(12.to_ordinal_string(), "12th");
 ```
 
 Get a number representing an ordinal you can use with comparisons and formatting.
 
 ```
-use ordinal_trait::ToOrdinal as _;
+use ordinal::ToOrdinal as _;
 let n = 12.to_ordinal();
 assert_eq!(*n, 12);
 assert_eq!(format!("{n}"), "12th");
@@ -62,7 +62,7 @@ mod number {
     /// Get a `Number` from an integer that implements [`ToOrdinal`].
     ///
     /// ```
-    /// use ordinal_trait::ToOrdinal as _;
+    /// use ordinal::ToOrdinal as _;
     /// let n = 12.to_ordinal();
     /// assert_eq!(*n, 12);
     /// assert_eq!(format!("{n}"), "12th");
@@ -71,7 +71,7 @@ mod number {
     /// You can also create a `Number` in a `const` expression.
     ///
     /// ```
-    /// use ordinal_trait::Ordinal;
+    /// use ordinal::Ordinal;
     /// const TWELVE: Ordinal<i32> = Ordinal(12);
     /// ```
     #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -83,7 +83,7 @@ mod number {
         /// # Examples
         ///
         /// ```
-        /// use ordinal_trait::Ordinal;
+        /// use ordinal::Ordinal;
         /// assert_eq!(Ordinal(12).suffix(), "th");
         /// ```
         pub fn suffix(&self) -> &'static str {
@@ -132,7 +132,7 @@ pub trait ToOrdinal: fmt::Display + Copy {
     /// # Examples
     ///
     /// ```
-    /// use ordinal_trait::ToOrdinal as _;
+    /// use ordinal::ToOrdinal as _;
     /// let n = 12.to_ordinal();
     /// assert_eq!(12, 12);
     /// assert_eq!(format!("{n}"), "12th");
@@ -147,7 +147,7 @@ pub trait ToOrdinal: fmt::Display + Copy {
     /// # Examples
     ///
     /// ```
-    /// use ordinal_trait::ToOrdinal as _;
+    /// use ordinal::ToOrdinal as _;
     /// assert_eq!(12.to_ordinal_string(), "12th");
     /// ```
     #[cfg(feature = "alloc")]
@@ -160,7 +160,7 @@ pub trait ToOrdinal: fmt::Display + Copy {
     /// # Examples
     ///
     /// ```
-    /// use ordinal_trait::ToOrdinal as _;
+    /// use ordinal::ToOrdinal as _;
     /// assert_eq!(12.suffix(), "th");
     /// ```
     fn suffix(self) -> &'static str;

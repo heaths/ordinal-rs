@@ -5,7 +5,7 @@ use criterion::{
     black_box, criterion_group, criterion_main, profiler::Profiler, BenchmarkId, Criterion,
 };
 use num_format::{Locale, ToFormattedString as _};
-use ordinal_trait::ToOrdinal;
+use ordinal::ToOrdinal;
 use std::{
     alloc::{GlobalAlloc, System},
     sync::atomic::{AtomicUsize, Ordering},
@@ -19,7 +19,7 @@ static GLOBAL: ReportingAllocator<System> = ReportingAllocator::new(System);
 pub fn fmt(c: &mut Criterion) {
     let mut group = c.benchmark_group("fmt");
     for i in INPUTS {
-        group.bench_with_input(BenchmarkId::new("ordinal-trait", i), i, |b, i| {
+        group.bench_with_input(BenchmarkId::new("ordinal", i), i, |b, i| {
             b.iter(|| black_box(i.to_ordinal_string()))
         });
         group.bench_with_input(BenchmarkId::new("num-ordinal", i), i, |b, i| {
@@ -31,8 +31,8 @@ pub fn fmt(c: &mut Criterion) {
                 ))
             })
         });
-        group.bench_with_input(BenchmarkId::new("ordinal", i), i, |b, i| {
-            b.iter(|| black_box(format!("{}", ordinal::Ordinal(*i))))
+        group.bench_with_input(BenchmarkId::new("ordinal@0.3.2", i), i, |b, i| {
+            b.iter(|| black_box(format!("{}", ordinal_legacy::Ordinal(*i))))
         });
         group.bench_with_input(BenchmarkId::new("ordinal-type", i), i, |b, i| {
             b.iter(|| black_box(format!("{}", ordinal_type::Ordinal(*i))))
@@ -44,11 +44,11 @@ pub fn fmt(c: &mut Criterion) {
 pub fn suffix(c: &mut Criterion) {
     let mut group = c.benchmark_group("suffix");
     for i in INPUTS {
-        group.bench_with_input(BenchmarkId::new("ordinal-trait", i), i, |b, i| {
+        group.bench_with_input(BenchmarkId::new("ordinal", i), i, |b, i| {
             b.iter(|| black_box(i.suffix()))
         });
-        group.bench_with_input(BenchmarkId::new("ordinal", i), i, |b, i| {
-            b.iter(|| black_box(ordinal::Ordinal(*i).suffix()))
+        group.bench_with_input(BenchmarkId::new("ordinal@0.3.2", i), i, |b, i| {
+            b.iter(|| black_box(ordinal_legacy::Ordinal(*i).suffix()))
         });
         group.bench_with_input(BenchmarkId::new("ordinal-type", i), i, |b, i| {
             b.iter(|| black_box(ordinal_type::Ordinal(*i).suffix()))

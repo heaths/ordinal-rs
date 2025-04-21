@@ -1,6 +1,6 @@
 [package]
-name = "ordinal-trait"
-version = "0.1.0"
+name = "ordinal"
+version = "0.4.0"
 edition = "2021"
 authors = ["Heath Stewart (https://github.com/heaths)"]
 license = "MPL-2.0"
@@ -22,7 +22,7 @@ chrono = { version = "0.4.39", default-features = false, features = [
 criterion = "0.5.1"
 num-format = "0.4.4"
 num-ordinal = "0.2.0"
-ordinal = "0.3.2"
+ordinal-legacy = { package = "ordinal", version = "0.3.2" }
 ordinal-type = "0.3.0"
 
 [lib]
