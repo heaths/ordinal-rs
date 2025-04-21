@@ -8,15 +8,15 @@ You can get the ordinal suffix e.g., "st", "nd", "rd", or "th" without allocatio
 Format a number as an ordinal, allocating a new `String`:
 
 ```rust
-use ordinal_trait::Ordinal as _;
-assert_eq!(12.to_ordinal(), "12th");
+use ordinal::ToOrdinal as _;
+assert_eq!(12.to_ordinal_string(), "12th");
 ```
 
 Get a number representing an ordinal you can use with comparisons and formatting.
 
 ```rust
-use ordinal_trait::Ordinal as _;
-let n = 12.to_number();
+use ordinal::ToOrdinal as _;
+let n = 12.to_ordinal();
 assert_eq!(*n, 12);
 assert_eq!(format!("{n}"), "12th");
 ```
@@ -67,11 +67,17 @@ cargo bench -- suffix --profile-time 3
 Would print something like:
 
 ```text
-Benchmarking suffix/ordinal-trait/1: Profiling for 3.0000 s; allocated 0 KiB
-Benchmarking suffix/ordinal-trait/1: Complete (Analysis Disabled)
-Benchmarking suffix/ordinal/1: Profiling for 3.0000 s; allocated 958,951 KiB
+Benchmarking suffix/ordinal/1: Profiling for 3.0000 s; allocated 0 KiB
 Benchmarking suffix/ordinal/1: Complete (Analysis Disabled)
+Benchmarking suffix/ordinal@0.3.2/1: Profiling for 3.0000 s; allocated 958,951 KiB
+Benchmarking suffix/ordinal@0.3.2/1: Complete (Analysis Disabled)
 Benchmarking suffix/ordinal-type/1: Profiling for 3.0000 s; allocated 949,659 KiB
 Benchmarking suffix/ordinal-type/1: Complete (Analysis Disabled)
 ...
 ```
+
+## History
+
+This crate was previously published as [`ordinal-trait`](https://crates.io/crates/ordinal-trait) to format numbers efficiently.
+After coming across [gleich/ordinal#3](https://github.com/gleich/ordinal/pull/3) I offered to make mine compatible and maintain
+mine as [`ordinal`](https://crates.io/crates/ordinal). Thanks to [@gleich](https://github.com/gleich) for creating `ordinal`.

@@ -368,14 +368,14 @@ dependencies = [
 ]
 
 [[package]]
-name = "ordinal-trait"
-version = "0.1.0"
+name = "ordinal"
+version = "0.4.0"
 dependencies = [
  "chrono",
  "criterion",
  "num-format",
  "num-ordinal",
- "ordinal",
+ "ordinal 0.3.2",
  "ordinal-type",
 ]
 

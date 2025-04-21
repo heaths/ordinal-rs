@@ -1,11 +1,11 @@
-// Copyright 2020 Heath Stewart.
-// Licensed under the MIT License. See LICENSE.txt in the project root for license information.
+// This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+// If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 use criterion::{
     black_box, criterion_group, criterion_main, profiler::Profiler, BenchmarkId, Criterion,
 };
 use num_format::{Locale, ToFormattedString as _};
-use ordinal_trait::Ordinal;
+use ordinal::ToOrdinal;
 use std::{
     alloc::{GlobalAlloc, System},
     sync::atomic::{AtomicUsize, Ordering},
@@ -19,8 +19,8 @@ static GLOBAL: ReportingAllocator<System> = ReportingAllocator::new(System);
 pub fn fmt(c: &mut Criterion) {
     let mut group = c.benchmark_group("fmt");
     for i in INPUTS {
-        group.bench_with_input(BenchmarkId::new("ordinal-trait", i), i, |b, i| {
-            b.iter(|| black_box(format!("{}", i.to_number())))
+        group.bench_with_input(BenchmarkId::new("ordinal", i), i, |b, i| {
+            b.iter(|| black_box(i.to_ordinal_string()))
         });
         group.bench_with_input(BenchmarkId::new("num-ordinal", i), i, |b, i| {
             // cspell:ignore Osize
@@ -31,8 +31,8 @@ pub fn fmt(c: &mut Criterion) {
                 ))
             })
         });
-        group.bench_with_input(BenchmarkId::new("ordinal", i), i, |b, i| {
-            b.iter(|| black_box(format!("{}", ordinal::Ordinal(*i))))
+        group.bench_with_input(BenchmarkId::new("ordinal@0.3.2", i), i, |b, i| {
+            b.iter(|| black_box(format!("{}", ordinal_legacy::Ordinal(*i))))
         });
         group.bench_with_input(BenchmarkId::new("ordinal-type", i), i, |b, i| {
             b.iter(|| black_box(format!("{}", ordinal_type::Ordinal(*i))))
@@ -44,11 +44,11 @@ pub fn fmt(c: &mut Criterion) {
 pub fn suffix(c: &mut Criterion) {
     let mut group = c.benchmark_group("suffix");
     for i in INPUTS {
-        group.bench_with_input(BenchmarkId::new("ordinal-trait", i), i, |b, i| {
+        group.bench_with_input(BenchmarkId::new("ordinal", i), i, |b, i| {
             b.iter(|| black_box(i.suffix()))
         });
-        group.bench_with_input(BenchmarkId::new("ordinal", i), i, |b, i| {
-            b.iter(|| black_box(ordinal::Ordinal(*i).suffix()))
+        group.bench_with_input(BenchmarkId::new("ordinal@0.3.2", i), i, |b, i| {
+            b.iter(|| black_box(ordinal_legacy::Ordinal(*i).suffix()))
         });
         group.bench_with_input(BenchmarkId::new("ordinal-type", i), i, |b, i| {
             b.iter(|| black_box(ordinal_type::Ordinal(*i).suffix()))

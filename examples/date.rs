@@ -3,7 +3,7 @@
 
 // cspell:ignore datelike
 use chrono::{DateTime, Datelike as _, Local};
-use ordinal_trait::Ordinal as _;
+use ordinal::ToOrdinal as _;
 
 fn main() {
     let now: DateTime<Local> = Local::now();
