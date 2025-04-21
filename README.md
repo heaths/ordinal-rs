@@ -1,5 +1,10 @@
 # Ordinal formatting
 
+> ⚠️ Deprecated ⚠️
+>
+> Use [`ordinal`](https://crates.io/crates/ordinal). See [history](https://github.com/heaths/ordinal-rs/blob/main/README.md#history)
+> for more information.
+
 Format numbers as ordinals efficiently.
 You can get the ordinal suffix e.g., "st", "nd", "rd", or "th" without allocations.
 

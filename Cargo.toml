@@ -1,6 +1,6 @@
 [package]
 name = "ordinal-trait"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Heath Stewart (https://github.com/heaths)"]
 license = "MIT"
