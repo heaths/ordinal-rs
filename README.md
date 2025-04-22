@@ -80,4 +80,5 @@ Benchmarking suffix/ordinal-type/1: Complete (Analysis Disabled)
 
 This crate was previously published as [`ordinal-trait`](https://crates.io/crates/ordinal-trait) to format numbers efficiently.
 After coming across [gleich/ordinal#3](https://github.com/gleich/ordinal/pull/3) I offered to make mine compatible and maintain
-mine as [`ordinal`](https://crates.io/crates/ordinal). Thanks to [@gleich](https://github.com/gleich) for creating `ordinal`.
+mine as [`ordinal`](https://crates.io/crates/ordinal). Thanks to [@dtolnay](https://github.com/dtolnay) for creating `ordinal`
+and [@gleich](https://github.com/gleich) for previously maintaining it.
