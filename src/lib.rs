@@ -171,7 +171,7 @@ macro_rules! impl_ordinal {
         impl $crate::ToOrdinal for $t {
             fn suffix(self) -> &'static str {
                 let n = Abs::abs(self);
-                let n = (n % 20) as u8;
+                let n = (n % 100) as u8;
                 if (11..=13).contains(&n) {
                     return "th";
                 }
@@ -230,6 +230,9 @@ fn test_fmt() {
     assert_eq!(9i64.to_ordinal_string(), "9th");
     assert_eq!(10i128.to_ordinal_string(), "10th");
     assert_eq!(11isize.to_ordinal_string(), "11th");
+    assert_eq!(31isize.to_ordinal_string(), "31st");
+    assert_eq!(32isize.to_ordinal_string(), "32nd");
+    assert_eq!(33isize.to_ordinal_string(), "33rd");
 
     assert_eq!((-0i8).to_ordinal_string(), "0th");
     assert_eq!((-1i16).to_ordinal_string(), "-1st");
