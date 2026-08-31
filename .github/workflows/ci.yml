@@ -16,21 +16,19 @@ env:
   RUSTFLAGS: -Dwarnings
 
 jobs:
-  define-matrix:
+  channel:
     runs-on: ubuntu-latest
     outputs:
-      versions: ${{ steps.channel.outputs.versions }}
+      versions: ${{ steps.channel.outputs.channel }}
     steps:
     - name: Checkout
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
     - name: Get channel
       id: channel
-      run: |
-        VERSION=$(rustc --version | awk '{print $2}')
-        echo "versions=[\"stable\", \"$VERSION\"]" >> "$GITHUB_OUTPUT"
+      run: rustc --version | awk '{printf "channel=%s\n", $2}' >> "$GITHUB_OUTPUT"
 
   test:
-    needs: define-matrix
+    needs: channel
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -40,7 +38,7 @@ jobs:
         - windows-latest
         include:
         - os: ubuntu-latest
-          rust: ${{ fromJSON(needs.define-matrix.outputs.versions) }}
+          rust: ${{ needs.channel.outputs.channel }}
     steps:
     - &checkout
       name: Checkout
