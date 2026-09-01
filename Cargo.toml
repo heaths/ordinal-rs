@@ -1,6 +1,6 @@
 [package]
 name = "ordinal"
-version = "0.4.0"
+version = "0.4.1"
 edition = "2021"
 authors = ["Heath Stewart (https://github.com/heaths)"]
 license = "MPL-2.0"
