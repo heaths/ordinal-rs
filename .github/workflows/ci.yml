@@ -23,6 +23,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+    - name: Set up toolchain
+      run: rustup install --profile minimal --no-self-update
     - name: Get channels
       id: channels
       run: rustc --version | awk '{printf "channels=[\"%s\"]\n", $2}' >> "$GITHUB_OUTPUT"
@@ -93,4 +95,5 @@ jobs:
     - test
     - analyze
     steps:
-      - run: echo -e "\e[32mSuccess\e[0m"
+      - name: Print status
+        run: echo -e "\e[32mSuccess\e[0m"
