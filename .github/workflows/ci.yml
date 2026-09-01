@@ -86,3 +86,11 @@ jobs:
         config: .cspell.json
     - name: Build documentation
       run: cargo doc --all-features --no-deps --workspace
+
+  check:
+    runs-on: ubuntu-latest
+    needs:
+    - test
+    - analyze
+    steps:
+      - run: echo -e "\e[32mSuccess\e[0m"
